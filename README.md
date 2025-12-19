@@ -20,12 +20,6 @@ data-pipeline
 │   ├── stats
 │   │   ├── recorder.py        # Cálculo incremental de estadísticas
 │   └── data
-│       ├── 2012-1.csv
-│       ├── 2012-2.csv
-│       ├── 2012-3.csv
-│       ├── 2012-4.csv
-│       ├── 2012-5.csv
-│       ├── validation.csv
 │       └── data-prueba-data-engineer.zip
 ├── docker-compose.yml         # PostgreSQL para entorno local
 ├── Dockerfile

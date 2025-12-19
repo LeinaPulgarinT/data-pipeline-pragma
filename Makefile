@@ -59,5 +59,19 @@ run: check
 	@echo "Ejecutando pipeline..."
 	$(VENV_PYTHON) -m src.main
 
+clean:
+	@echo "Limpiando archivos temporales y datos..."
+	@find ./data -name "*.csv" -type f -delete
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
+	@rm -f *.log src/*.log
+	@echo "Limpieza completada."
+
+# Limpieza profunda: incluye borrar el ambiente virtual y volúmenes de Docker
+distclean: clean down
+	@echo "Realizando limpieza profunda..."
+	@rm -rf $(VENV)
+	@$(DOCKER_COMPOSE) down -v
+	@echo "Ambiente virtual y volúmenes de Docker eliminados."
+
 all: setup up run
 	@echo "Pipeline ejecutado completamente"

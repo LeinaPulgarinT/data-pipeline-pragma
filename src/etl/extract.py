@@ -7,20 +7,36 @@ import pandas as pd
 
 def ensure_unzipped(zip_path: str, extract_dir: str) -> None:
     """Descomprime el ZIP con los CSV si el directorio de destino está vacío."""
+    import os
+import zipfile
+import shutil
+
+def ensure_unzipped(zip_path: str, extract_dir: str) -> None:
+    """
+    Descomprime el ZIP eliminando carpetas internas para dejar los archivos
+    directamente en extract_dir.
+    """
     if not os.path.exists(zip_path):
-        raise FileNotFoundError(
-            f"No se encontró el archivo ZIP de datos en: {zip_path}"
-        )
+        raise FileNotFoundError(f"No se encontró el ZIP en: {zip_path}")
 
     os.makedirs(extract_dir, exist_ok=True)
 
-    existing_csvs = [f for f in os.listdir(extract_dir) if f.endswith(".csv")]
-    if existing_csvs:
+    # Si ya hay CSVs, no hacemos nada
+    if any(f.endswith(".csv") for f in os.listdir(extract_dir)):
         return
 
     with zipfile.ZipFile(zip_path, "r") as zf:
-        zf.extractall(extract_dir)
-
+        for member in zf.infolist():
+            if member.is_dir():
+                continue
+        
+            filename = os.path.basename(member.filename)
+            
+            if filename.endswith(".csv"):
+                source = zf.open(member)
+                target_path = os.path.join(extract_dir, filename)
+                with open(target_path, "wb") as target:
+                    shutil.copyfileobj(source, target)
 
 def list_csv_files(directory: str) -> List[str]:
     """Lista los archivos CSV en un directorio, ordenados por nombre."""
