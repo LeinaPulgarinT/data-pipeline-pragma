@@ -4,14 +4,14 @@ import sys
 
 
 def setup_logging() -> None:
-    """Configure root logger for the application.
+    """Configura el sistema de logging de la aplicación.
 
-    Reads LOG_LEVEL from environment (default INFO). Logs to stdout.
+    Lee el nivel desde la variable de entorno LOG_LEVEL (por defecto INFO)
+    y escribe los logs en stdout.
     """
     level_name = os.getenv("LOG_LEVEL", "INFO").upper()
     level = getattr(logging, level_name, logging.INFO)
 
-    # Basic configuration for the root logger
     logging.basicConfig(
         level=level,
         format="%(asctime)s | %(levelname)-7s | %(name)s | %(message)s",

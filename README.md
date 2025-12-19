@@ -7,7 +7,6 @@ El pipeline fue diseñado para cumplir explícitamente con los requerimientos de
 
 ```
 data-pipeline
-data-pipeline
 ├── src
 │   ├── main.py                # Punto de entrada del pipeline
 │   ├── pipeline.py            # Orquestación del flujo ETL
@@ -65,13 +64,26 @@ data-pipeline
   - Información útil sin ruido innecesario
 
 ## Ejemplo de Logs
+Durante la ejecución del pipeline, se generan logs informativos por cada archivo procesado, incluyendo métricas de lectura, inserción, duplicados y tiempo de procesamiento.
+
+Ejemplo de salida:
 
 ```
 Procesando archivo: 2012-1.csv
-→ filas leídas: 31
-→ filas insertadas: 0
-→ filas ignoradas (duplicadas): 31
-→ tiempo de procesamiento: 120 ms
+Archivo 2012-1.csv | leídas=22 | insertadas=22 | ignoradas=0 | tiempo=91 ms
+
+Procesando archivo: 2012-2.csv
+Archivo 2012-2.csv | leídas=29 | insertadas=29 | ignoradas=0 | tiempo=109 ms
+```
+
+Al finalizar cada fase, se imprimen las estadisticas acumuladas tanto en memoria como en la base de datos:
+
+```
+Estadísticas en ejecución (memoria) después de 2012-1..5:
+{'row_count': 143, 'sum_price': 8297.0, 'min_price': 10.0, 'max_price': 100.0, 'average_price': 58.02}
+
+Estadísticas en base de datos después de 2012-1..5:
+{'row_count': 143, 'average_price': 58.02, 'min_price': 10, 'max_price': 100}
 ```
 
 ## Cómo Ejecutar el Pipeline
