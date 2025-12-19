@@ -5,7 +5,7 @@ venv/
 .venv/
 
 
-# Python caches / compiled files
+# Pytho
 __pycache__/
 *.py[cod]
 

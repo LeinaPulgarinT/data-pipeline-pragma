@@ -2,10 +2,8 @@
 
 # Variables
 PYTHON := python3
-PIP := pip3
 VENV := venv
 VENV_PYTHON := $(VENV)/bin/python
-VENV_PIP := $(VENV)/bin/pip
 ZIP_PATH := ./data/data-prueba-data-engineer.zip
 
 # Detectar si usar docker-compose (viejo) o docker compose (nuevo)
@@ -18,8 +16,8 @@ help:
 	@echo "  make up        - Levanta PostgreSQL con Docker Compose"
 	@echo "  make down      - Detiene y elimina contenedores de Docker"
 	@echo "  make check     - Verifica que todo esté listo (DB arriba, ZIP en src/data/)"
-	@echo "  make run        - Ejecuta el pipeline completo"
-	@echo "  make clean      - Limpia datos temporales (CSVs descomprimidos, logs)"
+	@echo "  make run       - Ejecuta el pipeline completo"
+	@echo "  make clean     - Limpia datos temporales (CSVs descomprimidos, logs)"
 	@echo ""
 	@echo "Nota: Para activar el ambiente virtual manualmente: source $(VENV)/bin/activate"
 
@@ -41,7 +39,7 @@ up:
 	@$(DOCKER_COMPOSE) up -d db
 	@echo "Esperando a que PostgreSQL esté listo..."
 	@sleep 3
-	@echo " PostgreSQL está corriendo"udo
+	@echo " PostgreSQL está corriendo"
 
 down:
 	@echo "Deteniendo contenedores..."
@@ -60,12 +58,6 @@ check:
 run: check
 	@echo "Ejecutando pipeline..."
 	$(VENV_PYTHON) -m src.main
-
-clean:
-	@echo "Limpiando datos temporales..."
-	@rm -rf src/data/input/*.csv 2>/dev/null || true
-	@rm -rf logs/*.log 2>/dev/null || true
-	@echo "Limpieza completada"
 
 all: setup up run
 	@echo "Pipeline ejecutado completamente"

@@ -95,4 +95,15 @@ Esto realiza:
 
 ## Validacion
 
+El archivo `validation.csv` no forma parte de la carga inicial de datos.  
+Se ejecuta posteriormente a través del mismo pipeline con fines de validación.
+
+El objetivo de esta fase es verificar que:
+
+- El pipeline es **idempotente**.
+- Los registros que ya existen en la base de datos **no se duplican** gracias a la restricción de unicidad y al uso de `ON CONFLICT DO NOTHING`.
+- Los registros **nuevos** presentes en `validation.csv` se insertan correctamente.
+- Las estadísticas en ejecución (conteo, promedio, mínimo y máximo de `price`) se actualizan únicamente en función de los registros efectivamente insertados.
+
+Este comportamiento permite simular un escenario real de ingesta incremental, donde nuevos eventos pueden llegar junto con eventos ya procesados previamente.
 

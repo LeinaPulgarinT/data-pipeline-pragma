@@ -43,8 +43,6 @@ def _get_database_url() -> str:
     host = "localhost"
     port = "5432"
     db = "admin_db"
-    # todo: mirar si agrego esto en un .env
-
     return f"postgresql://{user}:{password}@{host}:{port}/{db}"
 
 
@@ -100,9 +98,6 @@ def insert_records(df: pd.DataFrame, source_file: str) -> tuple[int, list]:
         # Filas realmente insertadas
         inserted_rows = result.fetchall()
         inserted_count = len(inserted_rows)
-
-        # skipped = len(records) - inserted_count
-        # Note: intentionally not logging skipped records to avoid noisy output
 
         session.commit()
 
