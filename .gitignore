@@ -1,0 +1,12 @@
+# Project-specific ignores for this repo
+
+# Virtual environment used by Makefile
+venv/
+.venv/
+
+
+# Python caches / compiled files
+__pycache__/
+*.py[cod]
+
+

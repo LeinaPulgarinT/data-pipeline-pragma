@@ -1,0 +1,98 @@
+# Data Pipeline: Data Rangers
+
+Este proyecto implementa un pipeline de datos que carga archivos CSV de manera incremental, los procesa en micro-batches, los almacena en una base de datos relacional y mantiene estadísticas incrementales sin recalcular los datos históricos.
+
+El pipeline fue diseñado para cumplir explícitamente con los requerimientos del reto técnico, priorizando eficiencia, claridad y buenas prácticas de ingeniería de datos.
+## Estructura del Proyecto
+
+```
+data-pipeline
+data-pipeline
+├── src
+│   ├── main.py                # Punto de entrada del pipeline
+│   ├── pipeline.py            # Orquestación del flujo ETL
+│   ├── logging.py             # Configuración de logs
+│   ├── etl
+│   │   ├── extract.py         # Lectura de CSV por micro-batches
+│   │   ├── transforms.py      # Normalización y reglas de negocio
+│   │   └── load.py            # Inserción en base de datos
+│   ├── db
+│   │   ├── repository.py      # Acceso y persistencia en la base de datos
+│   ├── stats
+│   │   ├── recorder.py        # Cálculo incremental de estadísticas
+│   └── data
+│       ├── 2012-1.csv
+│       ├── 2012-2.csv
+│       ├── 2012-3.csv
+│       ├── 2012-4.csv
+│       ├── 2012-5.csv
+│       ├── validation.csv
+│       └── data-prueba-data-engineer.zip
+├── docker-compose.yml         # PostgreSQL para entorno local
+├── Dockerfile
+├── requirements.txt
+├── pyproject.toml
+├── Makefile
+└── README.md
+```
+
+## Características Principales
+
+**Carga incremental de CSV**
+  - Procesa todos los archivos CSV excepto `validation.csv`
+  - Nunca carga todos los archivos simultáneamente en memoria
+
+**Procesamiento por micro-batches**
+  - Lectura y carga en bloques configurables
+  - Control explícito del uso de memoria
+
+**Persistencia en base de datos**
+  - Base de datos PostgreSQL
+  - Prevención de duplicados mediante constraints y `ON CONFLICT DO NOTHING`
+
+**Manejo de valores nulos**
+  - Los valores nulos en `price` son imputados usando la mediana del batch
+  - Garantiza consistencia y evita duplicados por valores `NULL`
+
+**Estadísticas incrementales**
+  - Recuento de filas insertadas
+  - Promedio, mínimo y máximo de `price`
+  - Las estadísticas se actualizan **solo con nuevos datos**
+  - No se recalculan datos históricos desde la base de datos
+
+**Logs claros y orientados al negocio**
+  - Resumen por archivo procesado
+  - Información útil sin ruido innecesario
+
+## Ejemplo de Logs
+
+```
+Procesando archivo: 2012-1.csv
+→ filas leídas: 31
+→ filas insertadas: 0
+→ filas ignoradas (duplicadas): 31
+→ tiempo de procesamiento: 120 ms
+```
+
+## Cómo Ejecutar el Pipeline
+
+### Requisitos
+
+- Python 3.12+
+- Docker y Docker Compose
+
+### Ejecución Completa
+
+```
+make all
+```
+
+Esto realiza:
+1. Creación del entorno virtual
+2. Instalación de dependencias
+3. Levantamiento de PostgreSQL
+4. Ejecución del pipeline completo
+
+## Validacion
+
+
