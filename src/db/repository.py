@@ -8,7 +8,8 @@ from sqlalchemy import (
     create_engine,
     func,
     Boolean,
-    UniqueConstraint
+    UniqueConstraint,
+    text,
     
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, Session as SASession
@@ -34,8 +35,8 @@ class Record(Base):
 
     __table_args__ = (
         UniqueConstraint("event_date", "user_id", "price", name="uq_event"),
+        {"schema": "analytics"},
     )
-
 
 def _get_database_url() -> str:
     user = "pragma"
@@ -51,6 +52,8 @@ SessionLocal = sessionmaker(bind=ENGINE)
 
 
 def init_db() -> None:
+    with ENGINE.begin() as conn:
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS analytics"))
     Base.metadata.create_all(ENGINE)
 
 
