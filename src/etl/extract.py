@@ -1,15 +1,9 @@
 import os
+import shutil
 import zipfile
+import pandas as pd
 from typing import Generator, List, Tuple
 
-import pandas as pd
-
-
-def ensure_unzipped(zip_path: str, extract_dir: str) -> None:
-    """Descomprime el ZIP con los CSV si el directorio de destino está vacío."""
-    import os
-import zipfile
-import shutil
 
 def ensure_unzipped(zip_path: str, extract_dir: str) -> None:
     """
